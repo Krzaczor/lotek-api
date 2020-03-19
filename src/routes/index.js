@@ -1,7 +1,5 @@
-import home from './home';
-import numbers from './numbers';
+import draws from './draws';
 
 export default {
-    home,
-    numbers
+    draws
 };

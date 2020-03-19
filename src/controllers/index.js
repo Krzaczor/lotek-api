@@ -1,7 +1,7 @@
-import numbers from './numbers/index';
+import draws from './draws/index';
 
 const controllers = {
-    numbers
+    draws
 };
 
 export default controllers;
