@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.post('/', controllers.draws.addOne);
 router.get('/', controllers.draws.showAll);
-// router.get('/:id', controllers.numbers.showOne);
+router.get('/:id', controllers.draws.showOne);
 
 export default router;

@@ -18,10 +18,12 @@ const drawsSchema = new mongoose.Schema({
     }]
 });
 
-drawsSchema.pre('save', function (next) {
+drawsSchema.pre('validate', function (next) {
+
+    // In array only int numbers
     this.numbers.forEach(nr => {
-        if (parseInt(nr) == NaN) {
-            throw new Error('W lotka grasz debilu. Tam muszą być liczby!')
+        if (parseInt(nr) !== nr) {
+            throw new Error('W lotka grasz debilu. Tam muszą być liczby i to tylko naturane! Chyba wiesz jakie to liczby :P')
         }
     });
 

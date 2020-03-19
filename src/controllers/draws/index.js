@@ -12,6 +12,20 @@ const showAll = async ({ res }) => {
     }
 }
 
+const showOne = async (req, res) => {
+    const { id = -1 } = req.params;
+
+    try {
+        const draws = await Draws.find({ id }).select('id time numbers -_id').sort({ time: 'desc' });
+
+        res.status(200).json(draws);
+    } catch (error) {
+        res.status(502).json({
+            msg: error
+        });
+    }
+}
+
 const addOne = async (req, res) => {
     const id = new Date();
     const { time = null, numbers = [] } = req.body;
@@ -31,5 +45,6 @@ const addOne = async (req, res) => {
 
 export default {
     addOne,
+    showOne,
     showAll
 };
