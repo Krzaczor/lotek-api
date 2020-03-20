@@ -11,6 +11,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
+app.use('/numbers', routes.numbers);
 app.use('/draws', routes.draws);
 
 dotenv.config();

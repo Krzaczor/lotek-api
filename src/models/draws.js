@@ -11,9 +11,8 @@ const drawsSchema = new mongoose.Schema({
         required: true
     },
     numbers: [{
-        type: Number,
-        min: 1,
-        max: 49,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'numbers',
         required: true
     }]
 });
@@ -22,20 +21,20 @@ drawsSchema.pre('validate', function (next) {
 
     // In array only int numbers
     this.numbers.forEach(nr => {
-        if (parseInt(nr) !== nr) {
-            throw new Error('W lotka grasz debilu. Tam muszą być liczby i to tylko naturane! Chyba wiesz jakie to liczby :P')
+        if (parseInt(nr.value) !== nr.value) {
+            throw new Error('Tylko liczby całkowite.')
         }
     });
 
     // Array must have length 6
     if (this.numbers.length !== 6) {
-        throw new Error('Musi być kurwa 6 liczb debilu, bo nie przyjmą ci kuponu i chuja wygrasz, a nie hajs!')
+        throw new Error('Musi być 6 liczb.')
     }
 
     // Numbers in array without duplicate
     this.numbers.forEach((nr, index, self) => {
         if (self.indexOf(nr) !== index) {
-            throw new Error('Jak możesz debilu 2 razy zaznazyć tę samą liczbę, mądry ty kurwa jesteś?')
+            throw new Error('Liczby nie mogą się powtarzać.')
         }
     });
 

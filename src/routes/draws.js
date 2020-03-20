@@ -3,8 +3,8 @@ import controllers from '../controllers/index';
 
 const router = express.Router();
 
-router.post('/', controllers.draws.addOne);
 router.get('/', controllers.draws.showAll);
-router.get('/:id', controllers.draws.showOne);
+router.get('/:id', controllers.draws.show);
+router.post('/', controllers.draws.addOne);
 
 export default router;
