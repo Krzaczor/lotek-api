@@ -1,18 +1,12 @@
 import express from 'express';
-import * as Numbers from './method';
+import * as Numbers from './methods';
 import { allNumbers } from '../setting';
 
 const api = express.Router();
 
 api.get('/', async ({ res }) => {
     try {
-        const numbers = await Promise.all(allNumbers.map(async number => {
-            const count = await Numbers.find(number).countDocuments();
-
-            return { number, count };
-        }));
-
-        res.status(200).json(numbers);
+        res.status(200).json(allNumbers);
 
     } catch (error) {
         res.status(502).json({
@@ -21,15 +15,16 @@ api.get('/', async ({ res }) => {
     }
 });
 
-api.get('/:value', async (req, res) => {
-    const value = Number(req.params.value);
+api.get('/:number', async (req, res) => {
+    const number = Number(req.params.number);
 
     try {
-        const draws = await Numbers.find(value);
+        const draws = await Numbers.find({ number, limit: 100 });
+        const count = await Numbers.find({ number }).countDocuments();
 
         res.status(200).json({
-            number: value,
-            count: draws.length,
+            number,
+            count,
             draws
         });
 
@@ -39,6 +34,24 @@ api.get('/:value', async (req, res) => {
         });
     }
 })
+
+// api.get('/:value/count', async (req, res) => {
+//     const value = Number(req.params.value);
+
+//     try {
+//         const draws = await Numbers.find(value).countDocuments();
+
+//         res.status(200).json({
+//             number: value,
+//             count: draws
+//         });
+
+//     } catch (error) {
+//         res.status(502).json({
+//             message: error.message
+//         });
+//     }
+// })
 
 // api.post('/', async (req, res) => {
 //     let draws = req.body;
