@@ -2,7 +2,7 @@ import express from 'express';
 import * as drawsMethods from './methods';
 import isDevelopment from '../helpers/development';
 import { bodyFilter } from '../middlewares/filters/body';
-import { bodyValidate } from '../middlewares/validators/body';
+import bodyValidate from '../middlewares/validators/body';
 
 const api = express.Router();
 
@@ -35,11 +35,8 @@ api.get('/:id', async (req, res) => {
 if (isDevelopment()) {
     api.post('/', bodyFilter, async (req, res) => {
         try {
-            const { error, value } = bodyValidate(req.body);
-
-            console.log(error, value);
-            // const result = await drawsMethods.create(value);
-            const result = 'jfidjfso';
+            const newDraw = await bodyValidate(req.body);
+            const result = await drawsMethods.create(newDraw);
             res.status(201).json(result);
 
         } catch (error) {

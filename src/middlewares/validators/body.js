@@ -1,38 +1,44 @@
-import Joi from 'joi';
+import Joi from '@hapi/joi';
 import * as setting from '../../setting';
 
+//number schema in numbers array
 const JoiNumberSchema = Joi
     .number()
     .integer()
     .min(setting.minNumber)
     .max(setting.maxNumber)
     .required()
-    .error(() => {
-        throw new Error(`liczby muszą być całkowite oraz z przedziału od ${setting.minNumber} do ${setting.maxNumber}`)
-    })
+// .error(() => {
+//     throw new Error(`Joi liczby muszą być całkowite oraz z przedziału od ${setting.minNumber} do ${setting.maxNumber}`)
+// })
 
-const checkRepeatValues = (a, b) => {
-    if (a === b) {
-        throw new Error('liczby nie mogą się powtarzać.')
-    }
-};
+const checkRepeatValues = (a, b) => a === b;
+// if (a === b) {
+//     throw new Error('Joi: liczby nie mogą się powtarzać.')
+// }
+// };
 
-const JoiSchemaBody = Joi.object().keys({
-    time: Joi
-        .date()
-        .min(setting.minDateAsInt)
-        .required()
-        .error(() => {
-            throw new Error('nieprawidłowa data losowania')
-        }),
-    numbers: Joi
-        .array()
-        .length(setting.lengthDraw)
-        .items(JoiNumberSchema)
-        .unique(checkRepeatValues)
-        .required()
-}).error(() => {
-    throw new Error('niepełne dane')
-})
+//numbers schema in body request
+const JoiNumbersSchema = Joi
+    .array()
+    .length(setting.lengthDraw)
+    .items(JoiNumberSchema)
+    .unique(checkRepeatValues)
+    .required()
 
-export const bodyValidate = (body) => Joi.validate(body, JoiSchemaBody);
+//time schema in body request
+const JoiTimeSchema = Joi
+    .date()
+    .min(setting.minDateAsInt)
+    .required()
+// .error(() => {
+//     throw new Error('Joi: nieprawidłowa data losowania')
+// })
+
+//body schema in request POST /draws
+const JoiBodySchema = Joi.object().keys({
+    time: JoiTimeSchema,
+    numbers: JoiNumbersSchema
+}).options({ abortEarly: false });
+
+export default (body) => JoiBodySchema.validateAsync(body);
