@@ -12,14 +12,12 @@ const JoiNumberSchema = Joi.number()
         'number.max': `Najmnieszją liczbą musi być ${setting.maxNumber}`,
     });
 
-const checkRepeatValues = (a, b) => a === b;
-
 //numbers schema in body request
 const JoiNumbersSchema = Joi.array()
     .length(setting.lengthDraw)
     .empty()
     .items(JoiNumberSchema)
-    .unique(checkRepeatValues)
+    .unique((a, b) => a === b)
     .required()
     .messages({
         'array.base': 'Podano niepoprawne dane',

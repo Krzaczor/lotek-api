@@ -3,7 +3,7 @@ import * as setting from '../setting';
 
 const drawsSchema = new mongoose.Schema({
     id: {
-        type: Number,
+        type: String,
         required: true,
         unique: true,
         min: setting.minId
