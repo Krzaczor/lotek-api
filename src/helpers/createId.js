@@ -3,11 +3,11 @@ function correct(value) {
 }
 
 export default (time) => {
-    time = new Date(time);
+    const date = new Date(time);
 
-    const year = correct(time.getFullYear());
-    const month = correct(time.getMonth() + 1);
-    const day = correct(time.getDate());
+    const year = date.getFullYear();
+    const month = correct(date.getMonth() + 1);
+    const day = correct(date.getDate());
 
     return Number(`${year}${month}${day}`);
 }

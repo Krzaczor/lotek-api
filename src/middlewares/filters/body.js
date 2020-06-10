@@ -1,20 +1,21 @@
-import Draws from '../../draws/model';
-
-const ignoreProps = ['_id', '__v'];
+/*
+    For example
+    req.body = {time, numbers, _id, sth, nth} -> {time, numbers}
+    req.body = {foo, bar, __v} -> {}
+    req.body = {foo, numbers, bar} -> {numbers}
+*/
 
 export const bodyFilter = (req, res, next) => {
+    const allowedProps = ['time', 'numbers'];
     const keysReq = Object.keys(req.body);
-    const cleanProps = {};
-    const keysDraws = Object
-        .keys(Draws.schema.paths)
-        .filter(key => !ignoreProps.includes(key));
+    const allowProps = {};
 
     keysReq.forEach((key) => {
-        if (keysDraws.indexOf(key) !== -1) {
-            cleanProps[key] = req.body[key];
+        if (allowedProps.includes(key)) {
+            allowProps[key] = req.body[key];
         }
     });
 
-    req.body = cleanProps;
+    req.body = allowProps;
     next();
 }

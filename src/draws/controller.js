@@ -1,29 +1,41 @@
 import express from 'express';
 import * as drawsMethods from './methods';
 import isDevelopment from '../helpers/development';
-import { asyncFn, validProps } from '../middlewares/errors';
+import { asyncFn } from '../middlewares/errors';
 import { bodyFilter } from '../middlewares/filters/body';
+import { paramFilter } from '../middlewares/filters/param';
 import bodyValidate from '../middlewares/validators/body';
 
 const api = express.Router();
 
-api.get('/', asyncFn(async ({ res }) => {
-    const draws = await drawsMethods.findAll();
+api.get('/', paramFilter, asyncFn(async (req, res) => {
+    const draws = await drawsMethods.findAll({
+        year: req.query.year || null,
+        month: req.query.month || null
+    });
 
-    res.status(200).json(draws);
+    if (draws.hasNext) {
+        res.set('next', `${req.protocol}://${req.get('host')}${req.baseUrl}?year=${draws.next.year}&month=${draws.next.month}`);
+    }
+
+    res.status(200).json(draws.results);
 }));
 
 api.get('/:id', asyncFn(async (req, res) => {
     const id = req.params.id.toString();
-    const draw = await drawsMethods.find(id) || [];
+    const draw = await drawsMethods.findOne(id);
 
-    res.status(200).json(draw)
+    if (!draw) next();
+
+    res.status(200).json(draw);
 }));
 
 if (isDevelopment()) {
     api.post('/', bodyFilter, asyncFn(async (req, res) => {
         const newDraw = await bodyValidate(req.body);
         const draw = await drawsMethods.create(newDraw);
+
+        // if (!draw) next();
 
         res.status(201).json(draw);
     }));

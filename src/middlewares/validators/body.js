@@ -8,23 +8,24 @@ const JoiNumberSchema = Joi.number()
     .max(setting.maxNumber)
     .messages({
         'number.base': 'Podaj same liczby',
-        'number.min': `Największą liczbą musi być ${setting.minNumber}`,
-        'number.max': `Najmnieszją liczbą musi być ${setting.maxNumber}`,
+        'number.integer': 'Tylko liczby całkowite',
+        'number.min': `Największą liczbą może być ${setting.minNumber}`,
+        'number.max': `Najmnieszją liczbą może być ${setting.maxNumber}`,
     });
 
 //numbers schema in body request
 const JoiNumbersSchema = Joi.array()
-    .length(setting.lengthDraw)
+    .length(setting.countDraw)
     .empty()
     .items(JoiNumberSchema)
     .unique((a, b) => a === b)
     .required()
     .messages({
-        'array.base': 'Podano niepoprawne dane',
+        'array.base': 'Nie podano liczb',
         'any.required': 'Nie podano liczb',
-        'any.empty': 'Nie podano żadnych liczb',
-        'array.length': `Podaj dokładnie ${setting.lengthDraw} liczb`,
-        'array.unique': 'Liczby nie mogą się powtarzac'
+        'any.empty': 'Nie podano liczb',
+        'array.length': `Podaj dokładnie ${setting.countDraw} liczb`,
+        'array.unique': 'Liczby nie mogą się powtarzać'
     })
 
 //time schema in body request
