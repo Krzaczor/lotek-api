@@ -21,6 +21,12 @@ api.get('/', paramFilter, asyncFn(async (req, res) => {
     res.status(200).json(draws.results);
 }));
 
+api.get('/first', asyncFn(async (req, res) => {
+    const draw = await drawsMethods.findFirst();
+
+    res.status(200).json(draw);
+}));
+
 api.get('/:id', asyncFn(async (req, res) => {
     const id = req.params.id.toString();
     const draw = await drawsMethods.findOne(id);

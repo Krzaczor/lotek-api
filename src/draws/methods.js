@@ -10,8 +10,9 @@ export const findAll = async (props = {}) => {
 
     const drawsPromise = Draws
         .find({})
-        .select('id time numbers -_id')
+        .select('id time numbers range -_id')
         .where('time').lte(startTime).gt(endTime)
+        .sort({ time: 'desc' });
 
     const hasNextPromise = Draws
         .find({})
@@ -29,6 +30,14 @@ export const findAll = async (props = {}) => {
     }
 
     return result;
+}
+
+export const findFirst = () => {
+    return Draws
+        .findOne({})
+        .select('id time numbers range -_id')
+        .sort({ time: 'desc' })
+        .limit(1);
 }
 
 export const findOne = (id) => {
