@@ -1,7 +1,7 @@
 import express from 'express';
 import * as drawsMethods from './methods';
-import isDevelopment from '../helpers/development';
 import { asyncFn } from '../middlewares/errors';
+import auth from '../middlewares/auth';
 import { bodyFilter } from '../middlewares/filters/body';
 import { paramFilter } from '../middlewares/filters/param';
 import bodyValidate from '../middlewares/validators/body';
@@ -36,15 +36,14 @@ api.get('/:id', asyncFn(async (req, res) => {
     res.status(200).json(draw);
 }));
 
-if (isDevelopment()) {
-    api.post('/', bodyFilter, asyncFn(async (req, res) => {
-        const newDraw = await bodyValidate(req.body);
-        const draw = await drawsMethods.create(newDraw);
+api.post('/', [auth, bodyFilter], asyncFn(async (req, res) => {
+    const newDraw = await bodyValidate(req.body);
+    const draw = await drawsMethods.create(newDraw);
 
-        // if (!draw) next();
+    if (!draw) next();
 
-        res.status(201).json(draw);
-    }));
-}
+    res.status(201).json(draw);
+}));
+
 
 export default api;
