@@ -4,7 +4,6 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start:dev": "nodemon --exec babel-node server.js",
     "start": "nodemon --exec babel-node server.js"
   },
   "author": "",
