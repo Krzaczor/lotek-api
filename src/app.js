@@ -7,6 +7,9 @@ import usersController from './users/controller';
 
 const app = express();
 
+app.disable('x-powered-by');
+app.disable('etag');
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
