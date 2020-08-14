@@ -1,4 +1,5 @@
 import express from 'express';
+import passport from 'passport';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { notFound, errorMessage } from './middlewares/errors';
@@ -12,19 +13,17 @@ app.disable('etag');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(passport.initialize());
 
-const origin = '*';
+const CORS = cors({
+    origin: '*',
+    methods: 'GET,POST',
+    exposedHeaders: 'Next'
+});
 
-app.use('/draws', cors({
-    origin,
-    methods: 'GET POST',
-    exposedHeaders: 'next'
-}), drawsController);
+app.use('/draws', CORS, drawsController);
 
-app.use('/auth', cors({
-    origin,
-    methods: 'GET POST'
-}), usersController);
+app.use('/auth', CORS, usersController);
 
 app.use(notFound);
 app.use(errorMessage);

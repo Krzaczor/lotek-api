@@ -1,12 +1,12 @@
 import Draws from './model';
 import createId from '../helpers/createId';
 
-export const findAll = async (props = {}) => {
-    const year = props.year ?? (new Date()).getFullYear();
-    const month = props.month ?? (new Date()).getMonth() + 1;
+export const findAll = async ({ month, year }) => {
+    const getYear = year ?? (new Date()).getFullYear();
+    const getMonth = month ?? (new Date()).getMonth() + 1;
 
-    const startTime = new Date(year, month, 0);
-    const endTime = new Date(year, month - 6, 0);
+    const startTime = new Date(getYear, getMonth, 0);
+    const endTime = new Date(getYear, getMonth - 6, 0);
 
     const drawsPromise = Draws
         .find({})

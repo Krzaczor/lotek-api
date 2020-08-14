@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import detect from 'detect-port';
-
 import passport from './src/helpers/strategy';
 import app from './src/app';
 

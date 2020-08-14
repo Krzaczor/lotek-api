@@ -12,7 +12,6 @@ const cb = async (payload, done) => {
     } catch (error) {
         return done(error);
     }
-
 }
 
 export default () => {

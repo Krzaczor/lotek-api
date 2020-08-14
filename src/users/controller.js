@@ -1,13 +1,11 @@
 import express from 'express';
-import passport from 'passport';
-import jwt from 'jsonwebtoken';
-
 import { asyncFn } from '../middlewares/errors';
+import { authJWT, authLocal } from '../middlewares/auth';
 import * as Users from './methods';
 
 const api = express.Router();
 
-api.post('/register', asyncFn(async (req, res, next) => {
+api.post('/register', authJWT, asyncFn(async (req, res, next) => {
     await Users.create(req.body);
 
     res.status(201).json({
@@ -15,10 +13,18 @@ api.post('/register', asyncFn(async (req, res, next) => {
     })
 }));
 
-api.post('/login', passport.authenticate('local', { session: false }), asyncFn(async (req, res) => {
-    const token = jwt.sign({ id: req.user.id }, process.env.JWT_KEY, { expiresIn: 60 });
+api.post('/login', authLocal, (req, res) => {
+    if (req.user) {
+        const token = Users.login(req.user.id)
+        res.status(200).json({ token })
+    } else {
+        req.status(401).json({ message: 'chujnia' })
+    }
 
-    res.json({ token })
+});
+
+api.get('/veryfication', authJWT, asyncFn(async (req, res) => {
+    res.status(200).json({ success: true });
 }));
 
 api.get('/logout', asyncFn(async (req, res) => {

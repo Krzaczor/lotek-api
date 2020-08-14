@@ -1,7 +1,7 @@
 import express from 'express';
 import * as drawsMethods from './methods';
 import { asyncFn } from '../middlewares/errors';
-import auth from '../middlewares/auth';
+import { authJWT } from '../middlewares/auth';
 import { bodyFilter } from '../middlewares/filters/body';
 import { paramFilter } from '../middlewares/filters/param';
 import bodyValidate from '../middlewares/validators/body';
@@ -15,7 +15,7 @@ api.get('/', paramFilter, asyncFn(async (req, res) => {
     });
 
     if (draws.hasNext) {
-        res.set('next', `${req.protocol}://${req.get('host')}${req.baseUrl}?year=${draws.next.year}&month=${draws.next.month}`);
+        res.set('Next', `${req.protocol}://${req.get('host')}${req.baseUrl}?year=${draws.next.year}&month=${draws.next.month}`);
     }
 
     res.status(200).json(draws.results);
@@ -36,7 +36,7 @@ api.get('/:id', asyncFn(async (req, res) => {
     res.status(200).json(draw);
 }));
 
-api.post('/', [auth, bodyFilter], asyncFn(async (req, res) => {
+api.post('/', [authJWT, bodyFilter], asyncFn(async (req, res) => {
     const newDraw = await bodyValidate(req.body);
     const draw = await drawsMethods.create(newDraw);
 
