@@ -5,6 +5,15 @@ import * as Users from './methods';
 
 const api = express.Router();
 
+/**
+ * @Route("/auth/register")
+ * @Method("POST")
+ * @Body(["username", "password"])
+ * 
+ * return Object
+ * 
+ * register new user and return message.
+ */
 api.post('/register', authJWT, asyncFn(async (req, res, next) => {
     await Users.create(req.body);
 
@@ -13,6 +22,15 @@ api.post('/register', authJWT, asyncFn(async (req, res, next) => {
     })
 }));
 
+/**
+ * @Route("/auth/login")
+ * @Method("POST")
+ * @Body()
+ * 
+ * return Object
+ * 
+ * login user and return token or message fail.
+ */
 api.post('/login', authLocal, (req, res) => {
     if (req.user) {
         const token = Users.login(req.user.id)
@@ -23,12 +41,32 @@ api.post('/login', authLocal, (req, res) => {
 
 });
 
+/**
+ * @Route("/auth/veryfication")
+ * @Method("GET")
+ * @Headers("Authorization")
+ * 
+ * return Object
+ * 
+ * checks if the user is logged in and if it exists.
+ */
 api.get('/veryfication', authJWT, asyncFn(async (req, res) => {
     res.status(200).json({ success: true });
 }));
 
+/**
+ * @Route("/auth/logout")
+ * @Method("GET")
+ * 
+ * return Object
+ * 
+ * logout user.
+ */
 api.get('/logout', asyncFn(async (req, res) => {
-
+    req.logout();
+    res.status(200).json({
+        message: 'wylogowano użytkownika'
+    })
 }));
 
 export default api;

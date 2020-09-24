@@ -15,15 +15,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(passport.initialize());
 
-const CORS = cors({
+app.use('/draws', cors({
     origin: '*',
     methods: 'GET,POST',
     exposedHeaders: 'Next'
-});
+}), drawsController);
 
-app.use('/draws', CORS, drawsController);
-
-app.use('/auth', CORS, usersController);
+app.use('/auth', cors({
+    origin: '*',
+    methods: 'GET,POST'
+}), usersController);
 
 app.use(notFound);
 app.use(errorMessage);
