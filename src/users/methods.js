@@ -11,6 +11,3 @@ export const create = async (data) => {
 export const login = (id) => {
     return jwt.sign({ id }, process.env.JWT_KEY, { expiresIn: 1200 });
 }
-
-export const findOne = (id) => {
-}

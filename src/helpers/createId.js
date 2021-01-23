@@ -1,13 +1,14 @@
-function correct(value) {
+import { getDate } from "./datetime";
+
+const correct = (value) => {
     return value >= 10 ? value : `0${value}`;
 }
 
 export default (time) => {
-    const date = new Date(time);
+    let { year, month, day } = getDate(time);
 
-    const year = date.getFullYear();
-    const month = correct(date.getMonth() + 1);
-    const day = correct(date.getDate());
+    month = correct(month);
+    day = correct(day);
 
     return Number(`${year}${month}${day}`);
 }

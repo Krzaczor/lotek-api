@@ -40,11 +40,19 @@ const JoiTimeSchema = Joi.date()
         'date.min': 'Data nie może być mniejsza niż 26.01.1957'
     })
 
+const JoiWinersSchema = Joi.array()
+    .items(Joi.object({
+        type: Joi.number().required(),
+        count: Joi.number().required(),
+        prize: Joi.number().required(),
+    })).allow(null);
+
 //body schema in request POST /draws
 const JoiBodySchema = Joi
     .object().keys({
         time: JoiTimeSchema,
-        numbers: JoiNumbersSchema
+        numbers: JoiNumbersSchema,
+        winers: JoiWinersSchema,
     })
 
 export default (body) => JoiBodySchema.validateAsync(body, { abortEarly: false });

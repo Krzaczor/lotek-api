@@ -1,28 +1,27 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import detect from 'detect-port';
 import passport from './src/helpers/strategy';
 import app from './src/app';
 
 dotenv.config({ path: '.env' });
 
-const PORT = parseInt(process.env.PORT) || 3001;
-const HOST = process.env.HOST || 'localhost';
-
 const connect = async (ip, port, dbname) => {
-    await mongoose.connect(`mongodb://${ip}:${port}/${dbname}`, {
+    const linkToDB = `mongodb://${ip}:${port}/${dbname}`;
+
+    await mongoose.connect(linkToDB, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true
     });
 
     const listener = app.listen(app.get('port'), () => {
-        console.log(`server http://${HOST}:${listener.address().port} started`);
+        const link = `http://localhost:${listener.address().port}`;
+        console.log(`server ${link} started`);
     });
 }
 
-const setPort = async () => {
-    app.set('port', await detect(PORT));
+const setPort = () => {
+    app.set('port', process.env.PORT || 3001);
 }
 
 mongoose.Promise = global.Promise;
